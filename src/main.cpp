@@ -8,7 +8,7 @@
 #include "WiFiNINA.h"
 #include "WiFiSSLClient.h"
 #include "api/Common.h"
-#include "poll_timer.cpp"
+#include "poll_timer.h"
 #include "variant.h"
 
 WiFiSSLClient wifiClient;
