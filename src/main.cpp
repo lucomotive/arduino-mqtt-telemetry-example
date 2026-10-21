@@ -79,10 +79,13 @@ void setup() {
   client.setServer(MQTT_ENDPOINT, MQTT_PORT);
 }
 
+// timers for tasks (look at loop function)
 Timer mqttTimer(1000);
 Timer blinkTimer(700);
 
 void loop() {
+  // two tasks run in "parallel"
+  // one sends telemetry every 1000ms and the other blinks every 700ms
   if (mqttTimer.poll())
     mqttTask();
   if (blinkTimer.poll())
