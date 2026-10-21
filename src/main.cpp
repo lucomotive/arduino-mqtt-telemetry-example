@@ -1,0 +1,85 @@
+// run with
+// pio run -t upload && pio device monitor
+
+#include "../env/wifi.h"
+#include "PubSubClient.h"
+#include "WiFiNINA.h"
+#include "WiFiSSLClient.h"
+#include "api/Common.h"
+#include "poll_timer.cpp"
+#include "variant.h"
+
+const char *MQTT_ENDPOINT = "iot.mastodon-buri.ts.net";
+const int MQTT_PORT = 10000;
+const char *CLIENT_ID = "3wkbt623o1spnvrb3f3q";
+const char *USER_NAME = "iz3dhk48ytlr6jiew8j0";
+const char *PASSWD = "5c2grpcvhi3w6007tczd";
+const char *TOPIC = "v1/devices/me/telemetry";
+
+WiFiSSLClient wifiClient;
+PubSubClient client(wifiClient);
+
+void connectWiFi() {
+  WiFi.begin(WIFI_SSID, WIFI_PASSWD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.print("\n");
+  Serial.println("WiFi connected");
+}
+void connectMQTT() {
+  while (!client.connected()) {
+    Serial.print("Connecting to ThingsBoard...");
+    // clientId, username (token), password (none)
+    if (client.connect(CLIENT_ID, USER_NAME, PASSWD)) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.println(client.state());
+      delay(2000);
+    }
+  }
+}
+void mqttTask() {
+  if (!client.connected())
+    connectMQTT();
+  client.loop();
+
+  int rssi = WiFi.RSSI();
+
+  // ThingsBoard expects JSON on this topic
+  char payload[100];
+  snprintf(payload, sizeof(payload), "{\"rssi\": %d}", rssi);
+
+  client.publish(TOPIC, payload);
+  Serial.print("Sent: ");
+  Serial.println(payload);
+}
+
+bool blinkState = false;
+void blinkTask() {
+  blinkState = !blinkState;
+  digitalWrite(LED_BUILTIN, blinkState);
+}
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial)
+    ;
+
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  connectWiFi();
+  client.setServer(MQTT_ENDPOINT, MQTT_PORT);
+}
+
+Timer mqttTimer(1000);
+Timer blinkTimer(700);
+
+void loop() {
+  if (mqttTimer.poll())
+    mqttTask();
+  if (blinkTimer.poll())
+    blinkTask();
+}
