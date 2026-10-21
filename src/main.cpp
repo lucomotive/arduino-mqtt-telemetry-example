@@ -44,7 +44,7 @@ void mqttTask() {
   int rssi = WiFi.RSSI();
 
   // ThingsBoard expects JSON on this topic
-  char payload[100];
+  char payload[32];
   snprintf(payload, sizeof(payload), "{\"rssi\": %d}", rssi);
 
   client.publish(TOPIC, payload);
