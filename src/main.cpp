@@ -1,20 +1,15 @@
 // run with
 // pio run -t upload && pio device monitor
 
+#include "../env/mqtt.h"
 #include "../env/wifi.h"
+
 #include "PubSubClient.h"
 #include "WiFiNINA.h"
 #include "WiFiSSLClient.h"
 #include "api/Common.h"
 #include "poll_timer.cpp"
 #include "variant.h"
-
-const char *MQTT_ENDPOINT = "iot.mastodon-buri.ts.net";
-const int MQTT_PORT = 10000;
-const char *CLIENT_ID = "3wkbt623o1spnvrb3f3q";
-const char *USER_NAME = "iz3dhk48ytlr6jiew8j0";
-const char *PASSWD = "5c2grpcvhi3w6007tczd";
-const char *TOPIC = "v1/devices/me/telemetry";
 
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
