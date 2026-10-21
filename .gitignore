@@ -1,0 +1,7 @@
+/.direnv
+/env
+/.pio
+/.zed
+/.cache
+.clangd
+compile_commands.json
