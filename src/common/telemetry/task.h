@@ -2,7 +2,15 @@
 #define TELEMETRY_TASK_H
 
 #include "PubSubClient.h"
+#include "timer.h"
 
-void telemetryTask(PubSubClient &);
+class TelemetryTask {
+public:
+  explicit TelemetryTask(unsigned int duration);
+  void poll(PubSubClient &);
+
+private:
+  Timer timer_;
+};
 
 #endif

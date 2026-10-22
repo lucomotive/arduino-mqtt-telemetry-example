@@ -17,35 +17,12 @@
 #include "WiFiNINA.h"
 #include "WiFiSSLClient.h"
 #include "common/blink/task.h"
+#include "common/mqtt/connect.h"
 #include "common/telemetry/task.h"
-#include "timer.h"
+#include "common/wifi/connect.h"
 
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
-
-void connectWiFi() {
-  WiFi.begin(WIFI_SSID, WIFI_PASSWD);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.print("\n");
-  Serial.println("WiFi connected");
-}
-void connectMQTT() {
-  while (!client.connected()) {
-    Serial.print("Connecting to ThingsBoard...");
-    // clientId, username (token), password (none)
-    if (client.connect(CLIENT_ID, USER_NAME, PASSWD)) {
-      Serial.println("connected");
-    } else {
-      Serial.print("failed, rc=");
-      Serial.println(client.state());
-      delay(2000);
-    }
-  }
-  client.loop();
-}
 
 void setup() {
   Serial.begin(115200);
@@ -54,25 +31,20 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  connectWiFi();
+  connectWiFi(WIFI_SSID, WIFI_PASSWD);
   client.setServer(MQTT_ENDPOINT, MQTT_PORT);
 }
 
-// timers for tasks (look at loop function)
-Timer telemetryTimer(1000);
-Timer blinkTimer(700);
+// definition of poll based tasks
+// look at loop function
+TelemetryTask telemetryTask(1000);
+BlinkTask blinkTask(LED_BUILTIN, 2.0);
 
 void loop() {
-  connectMQTT();
+  connectMQTT(client, CLIENT_ID, USER_NAME, PASSWD);
 
   // two tasks run in "parallel"
   // one sends telemetry every 1000ms and the other blinks every 700ms
-  if (telemetryTimer.elapsed()) {
-    telemetryTask(client);
-    telemetryTimer.restart();
-  }
-  if (blinkTimer.elapsed()) {
-    blinkTask();
-    blinkTimer.restart();
-  }
+  telemetryTask.poll(client);
+  blinkTask.poll();
 }
