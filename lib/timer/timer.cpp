@@ -1,5 +1,5 @@
 
-#include "poll_timer.h"
+#include "timer.h"
 #include "Arduino.h"
 
 Timer::Timer(unsigned int duration)

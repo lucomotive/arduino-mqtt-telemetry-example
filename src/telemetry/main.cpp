@@ -8,18 +8,16 @@
 // const char USER_NAME[] = "...";
 // const char PASSWD[] = "...";
 // const char TOPIC[] = "v1/devices/me/telemetry";
-#include "../env/mqtt.h"
+#include "../../env/mqtt.h"
 // expects a file like:
 // const char WIFI_SSID[] = "...";
 // const char WIFI_PASSWD[] = "...";
-#include "../env/wifi.h"
+#include "../../env/wifi.h"
 
 #include "PubSubClient.h"
 #include "WiFiNINA.h"
 #include "WiFiSSLClient.h"
-#include "api/Common.h"
-#include "poll_timer.h"
-#include "variant.h"
+#include "timer.h"
 
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
