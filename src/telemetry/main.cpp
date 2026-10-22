@@ -17,6 +17,8 @@
 #include "PubSubClient.h"
 #include "WiFiNINA.h"
 #include "WiFiSSLClient.h"
+#include "common/blink/task.h"
+#include "common/telemetry/task.h"
 #include "timer.h"
 
 WiFiSSLClient wifiClient;
@@ -43,29 +45,7 @@ void connectMQTT() {
       delay(2000);
     }
   }
-}
-void mqttTask() {
-  if (!client.connected())
-    connectMQTT();
   client.loop();
-}
-
-void telemetryTask() {
-  int rssi = WiFi.RSSI();
-
-  // ThingsBoard expects JSON on this topic
-  char payload[32];
-  snprintf(payload, sizeof(payload), "{\"rssi\": %d}", rssi);
-
-  client.publish(TOPIC, payload);
-  Serial.print("Sent: ");
-  Serial.println(payload);
-}
-
-bool blinkState = false;
-void blinkTask() {
-  blinkState = !blinkState;
-  digitalWrite(LED_BUILTIN, blinkState);
 }
 
 void setup() {
@@ -84,12 +64,12 @@ Timer telemetryTimer(1000);
 Timer blinkTimer(700);
 
 void loop() {
-  mqttTask();
+  connectMQTT();
 
   // two tasks run in "parallel"
   // one sends telemetry every 1000ms and the other blinks every 700ms
   if (telemetryTimer.elapsed()) {
-    telemetryTask();
+    telemetryTask(client);
     telemetryTimer.restart();
   }
   if (blinkTimer.elapsed()) {
