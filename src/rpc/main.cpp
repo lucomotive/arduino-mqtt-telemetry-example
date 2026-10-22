@@ -1,5 +1,5 @@
 // run with
-// pio run -t upload && pio device monitor
+// pio run -e rpc -t upload && pio device monitor
 
 // expects a file like:
 // const char MQTT_ENDPOINT[] = "...";
@@ -7,7 +7,6 @@
 // const char CLIENT_ID[] = "...";
 // const char USER_NAME[] = "...";
 // const char PASSWD[] = "...";
-// const char TOPIC[] = "v1/devices/me/telemetry";
 #include "../../env/mqtt.h"
 // expects a file like:
 // const char WIFI_SSID[] = "...";
