@@ -21,6 +21,7 @@
 #include "common/telemetry/task.h"
 #include "common/wifi/connect.h"
 
+// setup a wifi client and mqtt client
 WiFiSSLClient wifiClient;
 PubSubClient client(wifiClient);
 
@@ -37,11 +38,12 @@ void setup() {
 
 // definition of poll based tasks
 // look at loop function
-TelemetryTask telemetryTask(1000);
+TelemetryTask telemetryTask(1.0);
 BlinkTask blinkTask(LED_BUILTIN, 2.0);
 
 void loop() {
   connectMQTT(client, CLIENT_ID, USER_NAME, PASSWD);
+  client.loop();
 
   // two tasks run in "parallel"
   // one sends telemetry every 1000ms and the other blinks every 700ms

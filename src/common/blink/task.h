@@ -1,11 +1,12 @@
+// this is the header of the blink file.
+// is defines the class, its functions and fields.
+// the functions contents are later defined in the task.cpp file
+// in the same folder
 #ifndef BLINK_TASK_H
 #define BLINK_TASK_H
 
 #include "Arduino.h"
 #include "timer.h"
-
-// extern bool blinkState;
-// void blinkTask();
 
 class BlinkTask {
 public:

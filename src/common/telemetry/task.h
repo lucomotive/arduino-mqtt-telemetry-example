@@ -6,7 +6,7 @@
 
 class TelemetryTask {
 public:
-  explicit TelemetryTask(unsigned int duration);
+  explicit TelemetryTask(float freq);
   void poll(PubSubClient &);
 
 private:

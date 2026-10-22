@@ -3,6 +3,7 @@
 
 #include "PubSubClient.h"
 
+// this function connects the mqtt client to the server
 void connectMQTT(PubSubClient &client, const char *const id,
                  const char *const username, const char *const passwd) {
   while (!client.connected()) {
@@ -16,7 +17,6 @@ void connectMQTT(PubSubClient &client, const char *const id,
       delay(2000);
     }
   }
-  client.loop();
 }
 
 #endif
