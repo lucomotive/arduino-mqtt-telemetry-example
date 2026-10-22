@@ -132,7 +132,9 @@ void loop() {
     telemetryTask(client);
     telemetryTimer.restart();
   }
-  if (blinkTimer.elapsed() && blinkEnabled) {
+
+  if (blinkTimer.elapsed()) {
+    blinkState = !(blinkState && blinkEnabled);
     blinkTask();
     blinkTimer.restart();
   }
