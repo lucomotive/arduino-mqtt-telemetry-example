@@ -58,7 +58,7 @@ Timer telemetryTimer(1000);
 Timer blinkTimer(500);
 
 void callback(char *topic, byte *payload, unsigned int length) {
-  // Copy payload into a null-terminated string
+  // copy payload into string
   String message;
   for (unsigned int i = 0; i < length; i++)
     message += (char)payload[i];
