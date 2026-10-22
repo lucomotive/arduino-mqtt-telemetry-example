@@ -48,7 +48,9 @@ void mqttTask() {
   if (!client.connected())
     connectMQTT();
   client.loop();
+}
 
+void telemetryTask() {
   int rssi = WiFi.RSSI();
 
   // ThingsBoard expects JSON on this topic
@@ -78,15 +80,17 @@ void setup() {
 }
 
 // timers for tasks (look at loop function)
-Timer mqttTimer(1000);
+Timer telemetryTimer(1000);
 Timer blinkTimer(700);
 
 void loop() {
+  mqttTask();
+
   // two tasks run in "parallel"
   // one sends telemetry every 1000ms and the other blinks every 700ms
-  if (mqttTimer.elapsed()) {
-    mqttTask();
-    mqttTimer.restart();
+  if (telemetryTimer.elapsed()) {
+    telemetryTask();
+    telemetryTimer.restart();
   }
   if (blinkTimer.elapsed()) {
     blinkTask();
