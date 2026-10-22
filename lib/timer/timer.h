@@ -3,7 +3,7 @@
 
 class Timer {
 public:
-  Timer(unsigned int);
+  explicit Timer(unsigned int);
 
   bool elapsed();
   void restart();
