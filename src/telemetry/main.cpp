@@ -84,8 +84,12 @@ Timer blinkTimer(700);
 void loop() {
   // two tasks run in "parallel"
   // one sends telemetry every 1000ms and the other blinks every 700ms
-  if (mqttTimer.poll())
+  if (mqttTimer.elapsed()) {
     mqttTask();
-  if (blinkTimer.poll())
+    mqttTimer.restart();
+  }
+  if (blinkTimer.elapsed()) {
     blinkTask();
+    blinkTimer.restart();
+  }
 }
