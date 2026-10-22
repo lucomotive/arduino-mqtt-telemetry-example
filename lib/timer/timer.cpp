@@ -2,20 +2,14 @@
 #include "timer.h"
 #include "Arduino.h"
 
-Timer::Timer(unsigned int duration)
-    : finish(millis() + duration), duration(duration) {}
+Timer::Timer(unsigned int duration) : start_(millis()), duration_(duration) {}
 
-Poll Timer::poll() {
+bool Timer::elapsed() {
   auto now = millis();
-  if (finish > now)
-    return Poll::Pending;
-  finish = millis() + duration;
-  return Poll::Ready;
+  auto finish = this->start_ + this->duration_;
+  return finish <= now;
 };
 
-void Timer::await() {
-  while (this->poll())
-    ;
-}
-
-void Timer::reset() { finish = millis() + duration; }
+void Timer::restart() { start_ = millis(); }
+void Timer::set(unsigned int duration) { this->duration_ = duration; }
+unsigned int Timer::duration() { return duration_; }

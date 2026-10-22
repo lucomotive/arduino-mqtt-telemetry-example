@@ -1,20 +1,18 @@
 #ifndef POLL_TIMER_H
 #define POLL_TIMER_H
 
-enum Poll { Pending = 0, Ready = 1 };
-
 class Timer {
-
 public:
-  Timer(unsigned int duration);
+  Timer(unsigned int);
 
-  Poll poll();
-  void await();
-  void reset();
+  bool elapsed();
+  void restart();
+  void set(unsigned int);
+  unsigned int duration();
 
 private:
-  unsigned long finish;
-  unsigned int duration;
+  unsigned long start_;
+  unsigned int duration_;
 };
 
 #endif
