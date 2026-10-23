@@ -84,14 +84,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
     // getFreq returns the current frequency
     else if (String(method) == "getFreq") {
       String responseTopic = "v1/devices/me/rpc/response/" + requestId;
-      // creating a json with the frequency inside
-      String response = String("{\"value\":") + blinkTask.getFrequency() + "}";
 
+      float freq = blinkTask.getFrequency();
       Serial.println("Received RPC getFreq.");
-      Serial.println("Responding with " + response);
+      Serial.println("Responding with " + String(freq));
 
       // send back the response
-      client.publish(responseTopic.c_str(), response.c_str());
+      client.publish(responseTopic.c_str(), String(freq).c_str());
     }
 
   }
